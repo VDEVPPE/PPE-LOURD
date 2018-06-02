@@ -16,15 +16,50 @@ import java.util.List;
  * @author vincentf
  */
 public class ContratMaintenance {
-    public String   numContrat;
-    public Date     dateSignature;
-    public Date     dateEcheance;
+    private int      numContrat;
+    private Date     dateDebut;
+    private Date     dateEcheance;
+    private Date     dateRenouvel;
+    private int      idClient;
     
-    public List <Materiel> lesMaterielsAssures = new ArrayList <Materiel>();
+    private List <Materiel> lesMaterielsAssures = new ArrayList <Materiel>();
     
-    public ContratMaintenance(String numContrat, Date dateSignature, Date dateEcheance, Materiel lesMaterielsAssures) throws SQLException{
+    public ContratMaintenance(){
+        
+    }
+    
+    public int getNumContrat(){
+        return numContrat;
+    }
+    public void setNumContrat(int numContrat){
         this.numContrat = numContrat;
-        this.dateSignature = dateSignature;
-        this.dateEcheance = dateEcheance;        
+    }
+    
+    public Date getDateDebut(){
+        return dateDebut;
+    }
+    public void setDateDebut(Date dateDebut){
+        this.dateDebut = dateDebut;
+    }
+    
+    public Date getDateEcheance(){
+        return dateEcheance;
+    }
+    public void setDateEcheance(Date dateEcheance){
+        this.dateEcheance = dateEcheance;
+    }
+    
+    public Date getDateRenouvel(){
+        return dateRenouvel;
+    }
+    public void setDateRenouvel(Date dateRenouvel){
+        this.dateRenouvel = dateRenouvel;
+    }
+    
+    public int getIdClient(){
+        return idClient;
+    }
+    public void setIdClient(int idClient){
+        this.idClient = idClient;
     }
 }

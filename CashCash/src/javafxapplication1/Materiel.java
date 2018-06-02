@@ -12,6 +12,7 @@ public class Materiel {
     public float        prixVente;
     public String       emplacement;
     public TypeMateriel leType;
+    public int          idTypeMateriel;
     public int          idMateriel;
     public int          idContrat;
     public int          idClient;
@@ -87,5 +88,12 @@ public class Materiel {
     }
     public void setIdClient(int idClient){
         this.idClient = idClient;
+    }
+/*******************************************/
+    public int getIdTypeMateriel(){
+        return idTypeMateriel;
+    }
+    public void setIdTypeMateriel(int idTypeMateriel){
+        this.idTypeMateriel = idTypeMateriel;
     }
 }

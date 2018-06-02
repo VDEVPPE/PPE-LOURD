@@ -43,11 +43,11 @@ public class PersistanceSQL {
     public ResultSet select(String requete) throws SQLException{
         ResultSet resultFinal = null;
         //Ouvrir connexion
-        if (this.ouvrirConnexion()== true){
+        if (this.ouvrirConnexion()){
             //creation de l'object gerant les requetes
             Statement statement = connexion.createStatement();
             resultFinal = statement.executeQuery(requete);
-            System.out.println(resultFinal);
+            System.out.println("successful connection to the database");
        }
        return resultFinal;
     }

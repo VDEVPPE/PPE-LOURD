@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package javafxapplication1;
 
 import java.sql.ResultSet;
@@ -10,7 +5,6 @@ import java.sql.SQLException;
 import java.util.List;
 
 /**
- *
  * @author vincentf
  */
 public class testGetMateriel {
@@ -25,7 +19,7 @@ public class testGetMateriel {
         ResultSet resultat = null;
         
         try{
-            resultat = testPersist.select("SELECT * FROM materiel WHERE ID_client = 1");
+            resultat = testPersist.select("SELECT * FROM materiel WHERE ID_client = 1 AND ID_mat = 1");
             testResMat = testClient.getLesMateriels(resultat);
             for(Materiel materiel : testResMat){
                 System.out.println("Identifiant matériel : " + materiel.idMateriel);

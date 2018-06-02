@@ -15,6 +15,7 @@ public class Client {
     String nomClient;
     String adresse;
     String telClient;
+    int    telCopCli;
     String email;
     int    siren;
     int    codeApe;
@@ -26,19 +27,6 @@ public class Client {
     
     List <Materiel> lesMateriels= null/*new ArrayList <Materiel>()*/;
     ContratMaintenance leContrat;
-    
-    public Client(int numClient, String nomClient, String adresse, String telClient, String email, int siren, int codeApe, int dureeDeplacement, int distanceKm, int numAgence){
-        this.numClient        = numClient;
-        this.nomClient        = nomClient;
-        this.adresse          = adresse;
-        this.telClient        = telClient;
-        this.email            = email;
-        this.siren            = siren; 
-        this.codeApe          = codeApe;
-        this.dureeDeplacement = dureeDeplacement;
-        this.distanceKm       = distanceKm;
-        this.numAgence        = numAgence;
-    }
     
     public Client(){
         
@@ -70,6 +58,13 @@ public class Client {
     }
     public void setTelClient(String telClient){
         this.telClient = telClient;
+    }
+/*******************************************/    
+    public int getTelCopClient(){
+        return telCopCli;
+    }
+    public void setTelCopCli(int telCopClient){
+        this.telCopCli = telCopCli;
     }
 /*******************************************/    
     public String getEmail(){
@@ -143,7 +138,7 @@ public class Client {
                 unMateriel.setDateInstallation(dateInstal);
                 unMateriel.setPrixVente(prixMat);
                 unMateriel.setEmplacement(emplacement);
-                unMateriel.setIdMateriel(idType);
+                unMateriel.setIdTypeMateriel(idType);
                 unMateriel.setIdContrat(idContrat);
                 unMateriel.setIdClient(idClient);
 
