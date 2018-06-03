@@ -10,6 +10,8 @@ public class Materiel {
     public String       nom;
     public Date         dateInstallation;
     public float        prixVente;
+    public Date         dateVente;
+    public int          NbrJourAvantEcheance;
     public String       emplacement;
     public TypeMateriel leType;
     public int          idTypeMateriel;
@@ -21,11 +23,13 @@ public class Materiel {
         
     }
     
-    public Materiel(int numSerie, String nom, Date dateInstallation, float prixVente, String emplacement, TypeMateriel leType, int idMateriel, int idContrat, int idClient){
+    public Materiel(int numSerie, String nom, Date dateInstallation, float prixVente, Date dateVente,int NbrJourAvantEcheance,String emplacement, TypeMateriel leType, int idMateriel, int idContrat, int idClient){
         this.numSerie           = numSerie;
         this.nom                = nom;
         this.dateInstallation   = dateInstallation;
         this.prixVente          = prixVente;
+        this.dateVente          = dateVente;
+        this.NbrJourAvantEcheance = NbrJourAvantEcheance;
         this.emplacement        = emplacement;
         this.leType             = leType;
         this.idMateriel         = idMateriel;
@@ -96,4 +100,19 @@ public class Materiel {
     public void setIdTypeMateriel(int idTypeMateriel){
         this.idTypeMateriel = idTypeMateriel;
     }
+ /*******************************************/
+    public Date getDateVente(){
+        return dateVente;
+    }
+    public void setDateVente(Date dateVente){
+        this.dateVente = dateVente;
+    }
+/*******************************************/
+    public int getNbrJourAvantEcheance(){
+        return NbrJourAvantEcheance;
+    }
+    public void setNbrJourAvantEcheance(int NbrJourAvantEcheance){
+        this.NbrJourAvantEcheance = NbrJourAvantEcheance;
+    } 
+/*******************************************/  
 }
