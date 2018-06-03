@@ -20,6 +20,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -38,10 +39,12 @@ public class EnvoiPdf extends javax.swing.JFrame {
     Materiel            materiel  = null;
     ContratMaintenance  contrat     = null;
     
-    List <Materiel>     recupMat    = null;
-    List <Client>       infCli      = null;
+    ArrayList <Materiel>          recupMat    = null;
+    List <Client>                 infCli      = null;
+    ArrayList<ContratMaintenance> lesContrat  = new ArrayList();
+    
     GregorianCalendar   today       = new GregorianCalendar();
-    SimpleDateFormat    dateFormat   = new SimpleDateFormat("yyyy-MM-dd");
+    SimpleDateFormat    dateFormat  = new SimpleDateFormat("yyyy-MM-dd");
     public EnvoiPdf() {
         
         initComponents();
@@ -116,23 +119,54 @@ public class EnvoiPdf extends javax.swing.JFrame {
     private void idClientActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_idClientActionPerformed
         
     }//GEN-LAST:event_idClientActionPerformed
-public void test (ResultSet result) throws SQLException{
-
+public void contratPerim() throws SQLException{
+    System.out.println("********************************");
+    
     connexion.ouvrirConnexion();
+    ResultSet result = connexion.select("SELECT * FROM contrat WHERE "/*(SELECT ID_client FROM contrat WHERE Date_renouvel_contrat = '" + today + "')*/+" ID_client = " + idClient.getText());
+    //connexion.ouvrirConnexion();
     while (result.next()){
-          	 	 	 	
+        System.out.println("KiKou");
         int    idContrat    = result.getInt("ID_contrat");
-        Date debutContrat = result.getDate("Date_debut_contrat");
-        Date renouvContrat       = result.getDate("Date_renouvel_contrat");
-        Date echeanceDate        = result.getDate("Date_echeance_contrat");
-        int idClient         = result.getInt("ID_client");
+        Date debutContrat   = result.getDate("Date_debut_contrat");
+        Date renouvContrat  = result.getDate("Date_renouvel_contrat");
+        Date echeanceDate   = result.getDate("Date_echeance_contrat");
+        int idClient        = result.getInt("ID_client");
         
-        contrat.setIdClient(idClient);
         contrat.setNumContrat(idContrat);
         contrat.setDateDebut(debutContrat);
         contrat.setDateEcheance(echeanceDate);
         contrat.setDateRenouvel(renouvContrat);
+        
+        lesContrat.addAll((Collection<ContratMaintenance>) contrat);
+        
+        ResultSet lectMatContrat = connexion.select("SELECT * FROM materiel WHERE ID_client = " + contrat.getIdClient() + " AND ID_contrat = " + contrat.getNumContrat());
+        while(lectMatContrat.next()){
+            int     idMat       = lectMatContrat.getInt("ID_mat");
+            System.out.println(idMat);
+            String  nomMat      = lectMatContrat.getString("nom_mat");
+            Date    dateInstal  = lectMatContrat.getDate("Date_instal_mat");
+            float   prixMat     = lectMatContrat.getFloat("prix_mat");
+            String  emplacement = lectMatContrat.getString("emplacement_mag");
+            int     idType      = lectMatContrat.getInt("ID_typemat");
+            int     idContratMat= lectMatContrat.getInt("ID_contrat"); 	
+            int     idClientMat = lectMatContrat.getInt("ID_client");
+
+            materiel.setNumSerie(idMat);
+            System.out.println("id mat = " + materiel.getNumSerie());
+            materiel.setNom(nomMat);
+            materiel.setDateInstallation(dateInstal);
+            materiel.setPrixVente(prixMat);
+            materiel.setEmplacement(emplacement);
+            materiel.setIdTypeMateriel(idType);
+            materiel.setIdContrat(idContratMat);
+            materiel.setIdClient(idClientMat);
+
+            recupMat.addAll((Collection<Materiel>) materiel);
+        }
     }
+    System.out.println("********************************");
+    connexion.close();
 }
     
     public void recupInfoCli() throws SQLException{
@@ -162,6 +196,7 @@ public void test (ResultSet result) throws SQLException{
             client.setDistanceKm(distanceAgenceCli);
             client.setNumAgence(idAgenceCli);
         }
+        connexion.close();
     }
     
     public void creatPdf() throws SQLException{
@@ -170,18 +205,14 @@ public void test (ResultSet result) throws SQLException{
         today.setTime(new Date());
         if (!idClient.getText().equals(" ")){
             try {
-                connexion.ouvrirConnexion();
-                System.out.println(idClient.getText());
-                ResultSet lectContPerim = connexion.select("SELECT * FROM materiel WHERE (SELECT ID_client FROM contrat WHERE Date_renouvel_contrat = '" + today + "') = " + idClient.getText());
-                recupMat = client.getLesMateriels(lectContPerim);
-                connexion.close();
-                connexion.ouvrirConnexion();            
+                //recupMat = client.getLesMateriels(lectContPerim);
+                contratPerim();
                 recupInfoCli();
-                File myFile = new File("C:/Users/VincentF/Desktop/TestCashCash/TEST.pdf");
-                myFile.delete();
+                //File myFile = new File("C:/Users/VincentF/Desktop/TestCashCash/TEST.pdf");
+                //myFile.delete();
                 PdfWriter.getInstance(document, new FileOutputStream("C:/Users/VincentF/Desktop/TestCashCash/TEST.pdf"));
-                // step 3
                 document.open();
+                System.out.println("doc ouvert");
                 document.add(new Paragraph(client.getNomClient()));
                 document.add(new Paragraph(client.getAdresse()));
                 document.add(new Paragraph(client.getTelClient()));
@@ -191,15 +222,31 @@ public void test (ResultSet result) throws SQLException{
                 document.add(new Paragraph(" "));
                 document.add(new Paragraph(" "));
                 document.add(new Paragraph(" "));
-                document.add(new Paragraph("Monsieur/Madame " + client.getNomClient()));
-                document.add(new Paragraph("Vous recevez cette avis de relance pour le contrat N°" + recupMat.get))
+                document.add(new Paragraph("Monsieur/Madame "));
+                String numContrat = " ";
+                for (int i = 0; i < lesContrat.size(); i++) {
+                    contrat.setNumContrat(lesContrat.get(i).getNumContrat());
+                    numContrat = numContrat + ", " + String.valueOf(lesContrat.get(i).getNumContrat());
+                }
+                document.add(new Paragraph("Vous recevez cette avis de relance pour le contrat N°"+ "couvrant les materiaux décrient si-dessous."));
+                System.out.println("debut recupMat");
+                for (int i = 0; i < recupMat.size(); i++) {
+                    materiel.setIdMateriel(recupMat.get(i).getIdMateriel());
+                    System.out.print(recupMat.get(i).getIdMateriel());
+                    materiel.setNumSerie(recupMat.get(i).getNumSerie());
+                    materiel.setNom(recupMat.get(i).getNom());
+                    materiel.setDateInstallation(recupMat.get(i).getDateInstallation());
+                    
+                document.add(new Paragraph(materiel.getIdMateriel() + " | " + materiel.getNumSerie() + " | " +  materiel.getNom() + " | " + materiel.getDateInstallation()));    
+                }
+                document.close();
             } catch (DocumentException ex) {
                 Logger.getLogger(EnvoiPdf.class.getName()).log(Level.SEVERE, null, ex);
             } catch (FileNotFoundException ex) {
                 Logger.getLogger(EnvoiPdf.class.getName()).log(Level.SEVERE, null, ex);
             }
-            // step 5
-            document.close();
+            
+            
         }}
     private void validerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_validerActionPerformed
         try {

@@ -25,7 +25,7 @@ public class Client {
     
     public PersistanceSQL connexion;
     
-    List <Materiel> lesMateriels= null/*new ArrayList <Materiel>()*/;
+    ArrayList <Materiel> lesMateriels= null/*new ArrayList <Materiel>()*/;
     ContratMaintenance leContrat;
     
     public Client(){
